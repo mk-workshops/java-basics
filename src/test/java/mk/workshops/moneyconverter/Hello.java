@@ -6,6 +6,7 @@ import org.junit.Test;
 public class Hello {
     @Test
     public void alwaysTrue() {
-        Assertions.assertThat(true).isTrue();
+        var value = true;
+        Assertions.assertThat(value).isTrue();
     }
 }
