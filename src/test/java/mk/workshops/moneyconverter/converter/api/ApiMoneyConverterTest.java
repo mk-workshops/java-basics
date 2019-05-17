@@ -1,6 +1,5 @@
 package mk.workshops.moneyconverter.converter.api;
 
-import mk.workshops.moneyconverter.converter.file.FileMoneyConverter;
 import mk.workshops.moneyconverter.converter.file.UnsupportedCurrencyException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -13,24 +12,32 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
-
 public class ApiMoneyConverterTest {
     private ApiMoneyConverter converter;
 
     @Before
     public void setUp() throws Exception {
         var service = Mockito.mock(ExchangeRatesApiService.class);
-        var call = Mockito.mock(Call.class);
+        var callUsdPln = Mockito.mock(Call.class);
 
-        var exchange = new Exchange();
-        exchange.setBase("USD");
-        exchange.setRates(new HashMap<>() {{
-            put("PLN", 0.25f);
+        var exchangeUsdPln = new Exchange();
+        exchangeUsdPln.setBase("USD");
+        exchangeUsdPln.setRates(new HashMap<>() {{
+            put("PLN", 3.8246271989f);
         }});
 
-        Mockito.when(call.execute()).thenReturn(Response.success(exchange));
-        Mockito.when(service.getRatios("PLN", "USD")).thenReturn(call);
+        var callPlnPln = Mockito.mock(Call.class);
+
+        var exchangePlnPln = new Exchange();
+        exchangePlnPln.setBase("PLN");
+        exchangePlnPln.setRates(new HashMap<>() {{
+            put("PLN", 1.0f);
+        }});
+
+        Mockito.when(callUsdPln.execute()).thenReturn(Response.success(exchangeUsdPln));
+        Mockito.when(callPlnPln.execute()).thenReturn(Response.success(exchangePlnPln));
+        Mockito.when(service.getRatios("USD", "PLN")).thenReturn(callUsdPln);
+        Mockito.when(service.getRatios("PLN", "PLN")).thenReturn(callPlnPln);
 
         converter = new ApiMoneyConverter(service);
     }
