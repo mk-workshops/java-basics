@@ -1,5 +1,10 @@
 package mk.workshops.moneyconverter;
 
+import mk.workshops.moneyconverter.converter.api.ExchangeRatesApiService;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -24,5 +29,13 @@ public class Application {
                 System.out.println(book.getTitle());
             }
         }
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.exchangeratesapi.io")
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+
+        var service = retrofit.create(ExchangeRatesApiService.class);
+
     }
 }
