@@ -1,5 +1,6 @@
 package mk.workshops.moneyconverter;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class Basket{
@@ -23,8 +24,18 @@ public class Basket{
         return books.get(book);
     }
 
-    public Integer calculateTotalPrice() {
-        return 0;
+    public BigDecimal calculateTotalPrice() {
+        var books = this.books.entrySet();
+        var totalPrice = BigDecimal.ZERO;
+
+        for (var bookEntry: books) {
+            var quantity = bookEntry.getValue();
+            var price = bookEntry.getKey().getPrice().multiply(BigDecimal.valueOf(quantity));
+            totalPrice = totalPrice.add(price);
+        }
+
+        return totalPrice;
+
     }
 
 }

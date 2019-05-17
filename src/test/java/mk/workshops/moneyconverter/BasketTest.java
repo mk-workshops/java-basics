@@ -34,4 +34,19 @@ public class BasketTest {
         //then
         Assertions.assertThat(quantity).isEqualTo(3);
     }
+
+    @Test
+    public void should_return_total_price_for_all_books() {
+        //given
+        var basket = new Basket(1);
+        basket.add(new Book("Java", new BigDecimal("12.00")), 3);
+        basket.add(new Book("Php", new BigDecimal("8.00")), 1);
+
+        //when
+        var totalPrice = basket.calculateTotalPrice();
+
+        //then
+        Assertions.assertThat(totalPrice).isEqualByComparingTo("44.00");
+
+    }
 }
