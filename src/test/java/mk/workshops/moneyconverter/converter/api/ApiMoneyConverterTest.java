@@ -26,7 +26,7 @@ public class ApiMoneyConverterTest {
         var exchange = new Exchange();
         exchange.setBase("USD");
         exchange.setRates(new HashMap<>() {{
-            put("PLN", 3.8246271989f);
+            put("PLN", 0.25f);
         }});
 
         Mockito.when(call.execute()).thenReturn(Response.success(exchange));
@@ -50,7 +50,7 @@ public class ApiMoneyConverterTest {
         var convertedMoney = converter.convert(new BigDecimal("10.00"), "USD", "PLN");
 
         //then
-        Assertions.assertThat(convertedMoney).isEqualTo(new BigDecimal("\5"));
+        Assertions.assertThat(convertedMoney).isEqualTo(new BigDecimal("38.25"));
     }
 
     @Test
