@@ -1,6 +1,7 @@
 package mk.workshops.moneyconverter.converter.api;
 
 import mk.workshops.moneyconverter.converter.file.FileMoneyConverter;
+import mk.workshops.moneyconverter.converter.file.UnsupportedCurrencyException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +24,9 @@ public class ApiMoneyConverterTest {
         var call = Mockito.mock(Call.class);
 
         var exchange = new Exchange();
-        exchange.setBase("PLN");
+        exchange.setBase("USD");
         exchange.setRates(new HashMap<>() {{
-            put("USD", 0.25f);
+            put("PLN", 3.8246271989f);
         }});
 
         Mockito.when(call.execute()).thenReturn(Response.success(exchange));
@@ -41,5 +42,24 @@ public class ApiMoneyConverterTest {
 
         //then
         Assertions.assertThat(convertedMoney).isEqualTo(new BigDecimal("10.00"));
+    }
+
+    @Test
+    public void should_return_converted_up_money_for_the_different_currencies() throws IOException {
+        //when
+        var convertedMoney = converter.convert(new BigDecimal("10.00"), "USD", "PLN");
+
+        //then
+        Assertions.assertThat(convertedMoney).isEqualTo(new BigDecimal("\5"));
+    }
+
+    @Test
+    public void should_throw_exception_if_converting_from_not_supported_currency() throws IOException {
+        //when
+        var exception = Assertions.catchThrowable(
+                () -> converter.convert(new BigDecimal("10.00"), "GBP", "PLN"));
+
+        //then
+        Assertions.assertThat(exception).isInstanceOf(UnsupportedCurrencyException.class);
     }
 }
