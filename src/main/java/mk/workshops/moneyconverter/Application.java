@@ -1,24 +1,27 @@
 package mk.workshops.moneyconverter;
 
-import mk.workshops.moneyconverter.basket.Basket;
 import mk.workshops.moneyconverter.basket.Book;
+import mk.workshops.moneyconverter.converter.api.ExchangeRatiosRestApiService;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Application {
-    public static void main(String[] arg) {
-        Basket basketRomana = new Basket(1);
+    public static void main(String[] arg) throws IOException {
 
-        basketRomana.addBook(new Book("Java dla opornych", 19.99), 3);
-        basketRomana.addBook(new Book("Java dla zaawansowanych", 99.99), 2);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.exchangeratesapi.io")
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
 
-        LinkedList<Book> bookStorage = new LinkedList<>();
-        bookStorage.add(new Book("Java dla opornych", 19.99));
-        bookStorage.add(new Book("Java dla testerów", 9.99));
-        bookStorage.add(new Book("Java dla zaawansowanych", 99.99));
+        ExchangeRatiosRestApiService service = retrofit.create(ExchangeRatiosRestApiService.class);
 
+        Double ratio = service.getRatios("PLN", "EUR").execute().body().rates.get("EUR");
 
+        System.out.println(ratio);
     }
 
     class BookFilter {
