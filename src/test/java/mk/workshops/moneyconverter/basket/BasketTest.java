@@ -1,6 +1,5 @@
 package mk.workshops.moneyconverter.basket;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,5 +32,20 @@ public class BasketTest {
 
         //then
         assertThat(quantity).isEqualTo(5);
+    }
+
+    @Test
+    public void should_calculate_total_price_for_added_books() {
+        //given
+        Basket basket = new Basket(1);
+
+        basket.addBook(new Book("Java dla opornych", 20.00), 3);
+        basket.addBook(new Book("Java dla testerów", 30.00), 2);
+
+        //when
+        double price = basket.calculateTotalPrice();
+
+        //then
+        assertThat(price).isEqualTo(120.00);
     }
 }

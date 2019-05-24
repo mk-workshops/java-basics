@@ -1,6 +1,8 @@
 package mk.workshops.moneyconverter.basket;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Basket {
     private int id;
@@ -25,5 +27,17 @@ public class Basket {
 
     public int getBookQuantity(Book book) {
         return books.get(book);
+    }
+
+    public double calculateTotalPrice() {
+        Set<Map.Entry<Book, Integer>> allBooks = books.entrySet();
+
+        double totalPrice = 0;
+
+        for(Map.Entry<Book, Integer> bookEntry: allBooks) {
+            totalPrice += bookEntry.getKey().getPrice() * bookEntry.getValue();
+        }
+
+        return totalPrice;
     }
 }
