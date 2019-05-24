@@ -26,11 +26,11 @@ public class FileMoneyConverter {
             throw new UnsupportedCurrencyException();
         }
 
-        var ratio = getRatios().get(from + "-" + to);
+        var ratio = getRatio(from, to);
         return money.multiply(ratio).setScale(2, RoundingMode.CEILING);
     }
 
-    private Map<String, BigDecimal> getRatios() {
+    private BigDecimal getRatio(String from, String to) {
         try {
             var reader = new BufferedReader(new FileReader(path));
 
@@ -44,7 +44,7 @@ public class FileMoneyConverter {
                         new BigDecimal(values[2]));
             }
 
-            return ratios;
+            return ratios.get(from + "-" + to);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
