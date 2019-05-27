@@ -1,49 +1,38 @@
 package mk.workshops.moneyconverter.basket;
 
+import lombok.RequiredArgsConstructor;
 import mk.workshops.moneyconverter.converter.Converter;
+import mk.workshops.moneyconverter.converter.Converter.Currency;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class Basket{
-    private int id;
-    private Converter converter;
-    private HashMap<Book, Integer> books = new HashMap<>();
-
-    public Basket(int id, Converter converter) {
-        this.id = id;
-        this.converter = converter;
-    }
+    private final int id;
+    private final Converter converter;
+    private Map<Book, Integer> books = new HashMap<>();
 
     public void add(Book book, Integer quantity) {
-        if (books.containsKey(book)) {
-            var currentQuantity = books.get(book);
-            books.put(book, currentQuantity + quantity);
-        } else {
-            books.put(book, quantity);
-        }
+        books.merge(book, quantity, Integer::sum);
     }
 
     public Integer getQuantity(Book book) {
         return books.get(book);
     }
 
-    public BigDecimal calculateTotalPrice(String currencyTo) {
-        return this.books.entrySet().stream()
-            .filter(this::atLeastTwoBooks)
-            .map((bookEntry) -> convert(currencyTo, bookEntry))
+    public BigDecimal calculateTotalPrice(Currency currencyTo) {
+        return this.books.entrySet()
+            .stream()
+            .map(bookEntry -> convert(currencyTo, bookEntry.getKey(), bookEntry.getValue()))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private BigDecimal convert(String currencyTo, Map.Entry<Book, Integer> bookEntry) {
-        var quantity = bookEntry.getValue();
-        var price = bookEntry.getKey().getPrice().multiply(BigDecimal.valueOf(quantity));
-        var currencyFrom = bookEntry.getKey().getCurrency();
-        return converter.convert(price, currencyFrom ,currencyTo);
-    }
+    private BigDecimal convert(Currency to, Book book, Integer quantity) {
+        var price = book.getPrice().multiply(BigDecimal.valueOf(quantity));
+        var from = book.getCurrency();
 
-    private Boolean atLeastTwoBooks(Map.Entry<Book, Integer> bookEntry) {
-        return bookEntry.getValue() > 1;
+        return converter.convert(price, from ,to).orElseThrow(RuntimeException::new);
     }
 }

@@ -1,29 +1,35 @@
 package mk.workshops.moneyconverter.converter.api;
 
-import mk.workshops.moneyconverter.converter.FileRatioProvider;
+import lombok.RequiredArgsConstructor;
+import mk.workshops.moneyconverter.converter.Converter;
 import mk.workshops.moneyconverter.converter.RatioProvider;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 public class ApiRatioProvider implements RatioProvider {
-    ExchangeRatesApiService exchangeRatesApiService;
-    private FileRatioProvider provider;
+    private final ExchangeRatesApiService exchangeRatesApiService;
 
-    public ApiRatioProvider(ExchangeRatesApiService exchangeRatesApiService, FileRatioProvider provider) {
-        this.exchangeRatesApiService = exchangeRatesApiService;
-        this.provider = provider;
-    }
-
-    public BigDecimal getRatio(String from, String to) {
+    public Optional<BigDecimal> getRatio(Converter.Currency from, Converter.Currency to) {
         try {
-            var request = exchangeRatesApiService.getRatios(from, to);
+            var request = exchangeRatesApiService.getRatios(from.toString(), to.toString());
             var response = request.execute();
-            var ratio = response.body().getRates().get(to);
 
-            return BigDecimal.valueOf(ratio);
+            if (!response.isSuccessful()) {
+                return Optional.empty();
+            }
+
+            return Optional.ofNullable(response.body())
+                    .map(Exchange::getRates)
+                    .flatMap(rates ->
+                            Optional.ofNullable(rates.get(to.toString()))
+                    )
+                    .map(BigDecimal::new);
+
         } catch (IOException e) {
-            return provider.getRatio(from, to);
+            throw new RuntimeException(e);
         }
     }
 }

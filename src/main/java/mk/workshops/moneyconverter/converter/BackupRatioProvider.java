@@ -1,23 +1,22 @@
 package mk.workshops.moneyconverter.converter;
 
+import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
+import java.util.Optional;
 
+@RequiredArgsConstructor
 public class BackupRatioProvider implements RatioProvider {
-
-    private RatioProvider first;
-    private RatioProvider second;
-
-    public BackupRatioProvider(RatioProvider first, RatioProvider second) {
-        this.first = first;
-        this.second = second;
-    }
+    private final RatioProvider main;
+    private final RatioProvider backup;
 
     @Override
-    public BigDecimal getRatio(String from, String to) {
+    public Optional<BigDecimal> getRatio(Converter.Currency from, Converter.Currency to) {
         try {
-            return first.getRatio(from, to);
+            var ratio = main.getRatio(from, to);
+            return ratio.isPresent() ? ratio : backup.getRatio(from, to);
         } catch (RuntimeException e) {
-            return second.getRatio(from, to);
+            return backup.getRatio(from, to);
         }
     }
 }
