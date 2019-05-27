@@ -6,10 +6,12 @@ import java.util.Objects;
 public class Book {
     private String title;
     private BigDecimal price;
+    private String currency;
 
-    public Book(String title, BigDecimal price) {
+    public Book(String title, BigDecimal price, String currency) {
         this.title = title;
         this.price = price;
+        this.currency = currency;
     }
 
     public BigDecimal getPrice() {
@@ -18,6 +20,10 @@ public class Book {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 
     @Override

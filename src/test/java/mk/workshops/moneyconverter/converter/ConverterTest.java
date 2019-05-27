@@ -1,20 +1,27 @@
-package mk.workshops.moneyconverter.converter.file;
+package mk.workshops.moneyconverter.converter;
 
 import mk.workshops.moneyconverter.converter.UnsupportedCurrencyException;
+import mk.workshops.moneyconverter.converter.file.FileMoneyConverter;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 
-public class FileMoneyConverterTest {
+public class ConverterTest {
 
-    private FileMoneyConverter converter;
+    private Converter converter;
 
     @Before
     public void setUp() throws Exception {
-        converter = new FileMoneyConverter("src/test/resources/ratios");
+        var provider = Mockito.mock(RatioProvider.class);
+        Mockito.when(provider.getRatio("PLN", "PLN")).thenReturn(new BigDecimal("1"));
+        Mockito.when(provider.getRatio("USD", "PLN")).thenReturn(new BigDecimal("3.8246271989"));
+
+        converter = new Converter(provider);
     }
 
     @Test
