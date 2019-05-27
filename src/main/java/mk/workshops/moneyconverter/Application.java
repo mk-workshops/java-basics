@@ -33,6 +33,6 @@ public class Application {
         basket.add(new Book("Java dla opornych", new BigDecimal("29.99"), EUR), 2);
         basket.add(new Book("TypeScript dla progamistów Java", new BigDecimal("19.22"), USD), 3);
 
-        System.out.println(basket.calculateTotalPrice(PLN));
+        System.out.println(String.format("Total price: %s PLN", basket.calculateTotalPrice(PLN)));
     }
 }
