@@ -1,4 +1,4 @@
-package mk.workshops.moneyconverter;
+package mk.workshops.moneyconverter.basket;
 
 import java.math.BigDecimal;
 import java.util.Objects;

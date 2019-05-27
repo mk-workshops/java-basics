@@ -3,9 +3,9 @@ package mk.workshops.moneyconverter.converter.api;
 import java.util.Map;
 
 public class Exchange {
-    String base;
-    Map<String, Float> rates;
-    String date;
+    private String base;
+    private Map<String, Float> rates;
+    private String date;
 
     public String getBase() {
         return base;

@@ -1,5 +1,7 @@
-package mk.workshops.moneyconverter;
+package mk.workshops.moneyconverter.basket;
 
+import mk.workshops.moneyconverter.basket.Basket;
+import mk.workshops.moneyconverter.basket.Book;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package mk.workshops.moneyconverter;
+package mk.workshops.moneyconverter.basket;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,8 +13,8 @@ public class Basket{
 
     public void add(Book book, Integer quantity) {
         if (books.containsKey(book)) {
-            var current = books.get(book);
-            books.put(book, current + quantity);
+            var currentQuantity = books.get(book);
+            books.put(book, currentQuantity + quantity);
         } else {
             books.put(book, quantity);
         }
@@ -35,7 +35,6 @@ public class Basket{
         }
 
         return totalPrice;
-
     }
 
 }

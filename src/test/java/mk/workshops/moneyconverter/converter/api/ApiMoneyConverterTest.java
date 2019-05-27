@@ -1,6 +1,6 @@
 package mk.workshops.moneyconverter.converter.api;
 
-import mk.workshops.moneyconverter.converter.file.UnsupportedCurrencyException;
+import mk.workshops.moneyconverter.converter.UnsupportedCurrencyException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

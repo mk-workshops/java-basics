@@ -1,15 +1,14 @@
 package mk.workshops.moneyconverter.converter.file;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import mk.workshops.moneyconverter.converter.UnsupportedCurrencyException;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class FileMoneyConverter {
     private String path;
@@ -21,30 +20,26 @@ public class FileMoneyConverter {
         this.path = path;
     }
 
-    public BigDecimal convert(BigDecimal money, String from, String to) {
-        if (!supportedCurrencies.contains(from)) {
+    public BigDecimal convert(BigDecimal money, String currencyFrom, String currencyTo) {
+        if (!supportedCurrencies.contains(currencyFrom)) {
             throw new UnsupportedCurrencyException();
         }
 
-        var ratio = getRatio(from, to);
-        return money.multiply(ratio).setScale(2, RoundingMode.CEILING);
+        return getRatio(currencyFrom, currencyTo).multiply(money).setScale(2, RoundingMode.CEILING);
     }
 
-    private BigDecimal getRatio(String from, String to) {
+    private BigDecimal getRatio(String currencyFrom, String currencyTo) {
         try {
-            var reader = new BufferedReader(new FileReader(path));
+            List<String> linies = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
 
-            String line;
-            var ratios = new HashMap<String, BigDecimal>();
+            Map<String, BigDecimal> ratios = new HashMap<>();
 
-            while ((line = reader.readLine()) != null) {
-                String[] values = line.split(", ");
-                ratios.put(
-                        values[0] + "-" + values[1],
-                        new BigDecimal(values[2]));
+            for (String line : linies) {
+                String[] parts = line.split(", ");
+                ratios.put(parts[0] + parts[1], new BigDecimal(parts[2]));
             }
 
-            return ratios.get(from + "-" + to);
+            return ratios.get(currencyFrom + currencyTo);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

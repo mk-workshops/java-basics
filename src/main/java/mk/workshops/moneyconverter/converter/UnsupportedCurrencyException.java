@@ -1,4 +1,4 @@
-package mk.workshops.moneyconverter.converter.file;
+package mk.workshops.moneyconverter.converter;
 
 public class UnsupportedCurrencyException extends RuntimeException  {
 }

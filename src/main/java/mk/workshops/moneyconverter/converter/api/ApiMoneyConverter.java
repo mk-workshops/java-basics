@@ -1,15 +1,11 @@
 package mk.workshops.moneyconverter.converter.api;
 
-import mk.workshops.moneyconverter.converter.file.UnsupportedCurrencyException;
+import mk.workshops.moneyconverter.converter.UnsupportedCurrencyException;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class ApiMoneyConverter {
